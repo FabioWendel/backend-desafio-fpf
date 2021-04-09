@@ -14,6 +14,13 @@ class Participant extends Model {
 
     return this;
   }
+
+  static associate(models) {
+    this.belongsTo(models.Project, {
+      foreignKey: 'project_id',
+      as: 'project',
+    });
+  }
 }
 
 export default Participant;
