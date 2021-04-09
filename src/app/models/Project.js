@@ -16,6 +16,18 @@ class Project extends Model {
     );
     return this;
   }
+
+  static associate(models) {
+    this.hasMany(models.Participant, {
+      foreignKey: 'project_id',
+      as: 'projects',
+    });
+
+    this.hasMany(models.Participant, {
+      foreignKey: 'project_id',
+      as: 'participants',
+    });
+  }
 }
 
 export default Project;
