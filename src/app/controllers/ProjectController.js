@@ -26,6 +26,17 @@ class ProjectController {
       return res.status(400).json({ error: 'Project already exists' });
     }
 
+    
+    const [{ cpf }] = req.body.participants;
+
+    const cpfExist = await Participant.findOne({
+      where: { cpf: cpf},
+    });
+
+    if (cpfExist) {
+      return res.status(400).json({ error: 'CPF already exists' });
+    }
+
     const {
       name,
       date_init,
@@ -50,19 +61,109 @@ class ProjectController {
   }
 
   async index(req, res) {
-    return res.json({});
+    const projects = await Project.findAll({
+      include: [
+        {
+          model: Participant,
+          as: 'participants',
+        },
+      ],
+    });
+
+    return res.json(projects);
   }
 
   async show(req, res) {
-    return res.json({});
+    const { id } = req.params;
+    const project = await Project.findOne({
+      where: {
+        id: id,
+      },
+    });
+
+    if (!project) {
+      return res.status(400).json({ error: 'Project not exists.' });
+    }
+
+    return res.json(project);
   }
 
   async update(req, res) {
-    return res.json({});
+    const schema = Yup.object().shape({
+      name: Yup.string().required(),
+      date_init: Yup.date().required(),
+      date_finish: Yup.date().required(),
+      value_project: Yup.string().required(),
+      risk_project: Yup.string().required(),
+      participants: Yup.array().required(),
+    });
+
+    if (!(await schema.isValid(req.body))) {
+      return res.status(400).json({ error: 'Validation fails' });
+    }
+
+    const project = await Project.findOne({
+      where: { name: req.body.name },
+    });
+    
+    const [{ cpf }] = req.body.participants;
+
+    const cpfExist = await Participant.findOne({
+      where: { cpf: cpf},
+    });
+
+    if (cpfExist) {
+      return res.status(400).json({ error: 'CPF already exists' });
+    }
+
+    const { participants, ...rest } = req.body;
+
+    const {
+      name,
+      date_init,
+      date_finish,
+      value_project,
+      risk_project,
+    } = await project.update(rest);
+
+    await project.save();
+
+    const updatedParticipants = [];
+
+    await Participant.destroy({ where: { project_id: project.id } });
+
+    const promises = participants.map(async el => {
+      const participant = await Participant.create({ ...el, project_id: project.id });
+      updatedParticipants.push(participant);
+    });
+
+    await Promise.all(promises);
+
+    return res.json({
+      name,
+      date_init,
+      date_finish,
+      value_project,
+      risk_project,
+      participants: updatedParticipants,
+    });
+
   }
 
   async delete(req, res) {
-    return res.json({});
+    const { id } = req.params;
+
+    const project = await Project.findOne({
+      where: { id },
+    });
+
+    if (!project) {
+      return res.status(401).json({ error: 'Project not found.' });
+    }
+
+    await project.destroy({ where: { id } });
+
+    return res.status(200).json("Delected project "+id);
   }
 }
 
