@@ -5,10 +5,10 @@ class Project extends Model {
     super.init(
       {
         name: Sequelize.STRING,
-        dateInit: Sequelize.DATE,
-        dateFinish: Sequelize.DATE,
-        valueProject: Sequelize.DOUBLE,
-        riskProject: Sequelize.INTEGER,
+        date_init: Sequelize.DATE,
+        date_finish: Sequelize.DATE,
+        value_project: Sequelize.DOUBLE,
+        risk_project: Sequelize.INTEGER,
       },
       {
         sequelize,
