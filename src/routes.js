@@ -4,10 +4,10 @@ import ProjectController from './app/controllers/ProjectController';
 
 const routes = new Router();
 
-routes.get('/projetos', ProjectController.index);
-routes.get('/projetos/:id', ProjectController.show);
-routes.post('/projetos', ProjectController.store);
-routes.put('/projetos/:id', ProjectController.update);
-routes.delete('/projetos/:id', ProjectController.delete);
+routes.get('/projects', ProjectController.index);
+routes.get('/projects/:id', ProjectController.show);
+routes.post('/projects', ProjectController.store);
+routes.put('/projects/:id', ProjectController.update);
+routes.delete('/projects/:id', ProjectController.delete);
 
 export default routes;
