@@ -11,19 +11,19 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      dateInit: {
+      date_init: {
         type: Sequelize.DATE,
         allowNull: false,
       },
-      dateFinish: {
+      date_finish: {
         type: Sequelize.DATE,
         allowNull: false,
       },
-      valueProject: {
+      value_project: {
         type: Sequelize.DOUBLE,
         allowNull: false,
       },
-      riskProject: {
+      risk_project: {
         type: Sequelize.INTEGER,
         allowNull: false,
       },
