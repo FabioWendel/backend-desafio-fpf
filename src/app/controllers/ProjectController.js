@@ -26,16 +26,15 @@ class ProjectController {
       return res.status(400).json({ error: 'Project already exists' });
     }
 
-    
-    const [{ cpf }] = req.body.participants;
+    // const [{ cpf }] = req.body.participants;
 
-    const cpfExist = await Participant.findOne({
-      where: { cpf: cpf},
-    });
+    // const cpfExist = await Participant.findOne({
+    //   where: { cpf: cpf},
+    // });
 
-    if (cpfExist) {
-      return res.status(400).json({ error: 'CPF already exists' });
-    }
+    // if (cpfExist) {
+    //   return res.status(400).json({ error: 'CPF already exists' });
+    // }
 
     const {
       name,
@@ -77,7 +76,7 @@ class ProjectController {
     const { id } = req.params;
     const project = await Project.findOne({
       where: {
-        id: id,
+        id,
       },
     });
 
@@ -105,16 +104,16 @@ class ProjectController {
     const project = await Project.findOne({
       where: { name: req.body.name },
     });
-    
-    const [{ cpf }] = req.body.participants;
 
-    const cpfExist = await Participant.findOne({
-      where: { cpf: cpf},
-    });
+    // const [{ cpf }] = req.body.participants;
 
-    if (cpfExist) {
-      return res.status(400).json({ error: 'CPF already exists' });
-    }
+    // const cpfExist = await Participant.findOne({
+    //   where: { cpf },
+    // });
+
+    // if (cpfExist) {
+    //   return res.status(400).json({ error: 'CPF already exists' });
+    // }
 
     const { participants, ...rest } = req.body;
 
@@ -133,7 +132,10 @@ class ProjectController {
     await Participant.destroy({ where: { project_id: project.id } });
 
     const promises = participants.map(async el => {
-      const participant = await Participant.create({ ...el, project_id: project.id });
+      const participant = await Participant.create({
+        ...el,
+        project_id: project.id,
+      });
       updatedParticipants.push(participant);
     });
 
@@ -147,7 +149,6 @@ class ProjectController {
       risk_project,
       participants: updatedParticipants,
     });
-
   }
 
   async delete(req, res) {
@@ -163,7 +164,7 @@ class ProjectController {
 
     await project.destroy({ where: { id } });
 
-    return res.status(200).json("Delected project "+id);
+    return res.status(200).json(`Delected project ${id}`);
   }
 }
 
